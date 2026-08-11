@@ -1,0 +1,41 @@
+import { Promotie } from '@/types/promotion'
+
+export const promoties: Promotie[] = [
+  {
+    id: 'promo-001',
+    naam: 'Weekend Special',
+    beschrijving: '20% korting op alle combinaties dit weekend',
+    type: 'percentage',
+    waarde: 20,
+    code: 'WEEKEND20',
+    actief: true,
+    categorieIds: ['combinaties'],
+    label: '−20%',
+    kleur: 'orange',
+    afbeelding: 'https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=800&q=85',
+  },
+  {
+    id: 'promo-002',
+    naam: 'Lunch Deal',
+    beschrijving: 'Elke weekdag van 11u tot 14u — Lunch Deal met 20% korting',
+    type: 'percentage',
+    waarde: 20,
+    actief: true,
+    productIds: ['combo-003'],
+    label: 'LUNCH',
+    kleur: 'amber',
+    afbeelding: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=800&q=85',
+  },
+  {
+    id: 'promo-003',
+    naam: 'Family Box Deal',
+    beschrijving: '10% korting op de Family Box — perfect voor het hele gezin',
+    type: 'percentage',
+    waarde: 10,
+    actief: true,
+    productIds: ['combo-002'],
+    label: '−10%',
+    kleur: 'rose',
+    afbeelding: 'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=800&q=85',
+  },
+]

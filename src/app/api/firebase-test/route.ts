@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const db = getAdminDb()
+    const db = await getAdminDb()
     const testRef = db.collection('_test').doc('verbinding')
     await testRef.set({ getest: true, tijdstip: new Date().toISOString() })
     const snap = await testRef.get()

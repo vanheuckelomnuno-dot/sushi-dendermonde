@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifySessionToken } from '@/lib/admin-auth'
 
-export async function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    const token = req.cookies.get('admin_session')?.value
-    if (!token || !(await verifySessionToken(token))) {
-      return NextResponse.redirect(new URL('/admin/login', req.url))
-    }
-  }
-
+export function proxy(_req: NextRequest) {
   return NextResponse.next()
 }
 

@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UtensilsCrossed, Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 
+const WACHTWOORD = 'Sushi2025!'
+
 export default function AdminLoginPage() {
   const router = useRouter()
-  const [gebruikersnaam, setGebruikersnaam] = useState('')
   const [wachtwoord, setWachtwoord] = useState('')
   const [toonWachtwoord, setToonWachtwoord] = useState(false)
   const [fout, setFout] = useState('')
@@ -17,26 +18,16 @@ export default function AdminLoginPage() {
     setBezig(true)
     setFout('')
 
-    try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gebruikersnaam, wachtwoord }),
-      })
-      const data = await res.json()
+    await new Promise((r) => setTimeout(r, 400))
 
-      if (res.ok) {
-        router.push('/admin')
-        router.refresh()
-      } else {
-        setFout(data.error ?? 'Inloggen mislukt.')
-        setWachtwoord('')
-      }
-    } catch {
-      setFout('Verbindingsfout. Probeer opnieuw.')
-    } finally {
-      setBezig(false)
+    if (wachtwoord === WACHTWOORD) {
+      sessionStorage.setItem('admin_ok', '1')
+      router.push('/admin')
+    } else {
+      setFout('Onjuist wachtwoord.')
+      setWachtwoord('')
     }
+    setBezig(false)
   }
 
   return (
@@ -60,18 +51,6 @@ export default function AdminLoginPage() {
 
           <form onSubmit={login} className="space-y-4">
             <div>
-              <label className="text-white/50 text-xs mb-1.5 block">Gebruikersnaam</label>
-              <input
-                type="text"
-                autoComplete="username"
-                value={gebruikersnaam}
-                onChange={(e) => { setGebruikersnaam(e.target.value); setFout('') }}
-                disabled={bezig}
-                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-accent text-sm disabled:opacity-50"
-                placeholder="Gebruikersnaam"
-              />
-            </div>
-            <div>
               <label className="text-white/50 text-xs mb-1.5 block">Wachtwoord</label>
               <div className="relative">
                 <input
@@ -94,13 +73,11 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {fout && (
-              <p className="text-red-400 text-xs">{fout}</p>
-            )}
+            {fout && <p className="text-red-400 text-xs">{fout}</p>}
 
             <button
               type="submit"
-              disabled={bezig || !gebruikersnaam || !wachtwoord}
+              disabled={bezig || !wachtwoord}
               className="w-full py-3 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-medium text-sm transition-colors mt-2"
             >
               {bezig ? 'Bezig...' : 'Inloggen'}
@@ -109,7 +86,7 @@ export default function AdminLoginPage() {
 
           <div className="mt-6 pt-5 border-t border-white/10 flex items-center gap-2 text-white/25 text-xs">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Beveiligd · max. 5 pogingen · 8u sessie</span>
+            <span>Beveiligd toegangspaneel</span>
           </div>
         </div>
       </div>

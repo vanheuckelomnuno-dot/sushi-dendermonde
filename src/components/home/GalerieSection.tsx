@@ -22,35 +22,35 @@ export function GalerieSection() {
 
         {/* Photo grid — alleen bevestigde sushi foto's */}
         <div className="grid grid-cols-2 sm:grid-cols-3 grid-rows-2 gap-3 h-[480px] sm:h-[560px]">
-          {/* Groot verticaal beeld links — sushi rolls close-up */}
+          {/* Groot verticaal beeld links */}
           <div className="row-span-2 rounded-2xl overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=600&q=85"
-              alt="Sushi rolls"
+              src="/gerechten/boot-2p.jpg"
+              alt="Sushi boot 2 personen"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
-          {/* Poké bowl */}
+          {/* Rainbow roll */}
           <div className="rounded-2xl overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=85"
-              alt="Poké bowl"
+              src="/gerechten/rainbow.jpg"
+              alt="Rainbow roll"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
-          {/* Nigiri / sashimi */}
+          {/* Nigiri zalm */}
           <div className="rounded-2xl overflow-hidden hidden sm:block">
             <img
-              src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=85"
-              alt="Nigiri sushi"
+              src="/gerechten/nigiri-zalm.jpg"
+              alt="Nigiri zalm"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
           {/* Breed onderste beeld — sushi platter met hover CTA */}
           <div className="col-span-1 sm:col-span-2 rounded-2xl overflow-hidden relative group">
             <img
-              src="https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=900&q=85"
-              alt="Premium sushi assortiment"
+              src="/gerechten/mix-combo.jpg"
+              alt="Mix combo assortiment"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/30 transition-colors duration-300 flex items-center justify-center">

@@ -27,7 +27,7 @@ export function FeatureStrip() {
   return (
     <section className="relative py-10 overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1562802378-063ec186a863?w=1920&q=85"
+        src="/gerechten/dynamite-roll.jpg"
         alt="Sushi achtergrond"
         className="absolute inset-0 w-full h-full object-cover"
       />

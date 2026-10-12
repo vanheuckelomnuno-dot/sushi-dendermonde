@@ -18,7 +18,7 @@ export default function OverOnsPage() {
       {/* Hero */}
       <div className="relative h-64 lg:h-80 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=1920&q=85"
+          src="/gerechten/boot-2p.jpg"
           alt="Sushi Dendermonde"
           className="w-full h-full object-cover brightness-40"
         />
@@ -55,23 +55,23 @@ export default function OverOnsPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl overflow-hidden aspect-[3/4]">
               <img
-                src="https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=500&q=85"
-                alt="Sushi platter"
+                src="/gerechten/pink-lady.jpg"
+                alt="Pink lady roll"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="space-y-4 pt-8">
               <div className="rounded-2xl overflow-hidden aspect-square">
                 <img
-                  src="https://images.unsplash.com/photo-1562802378-063ec186a863?w=400&q=85"
-                  alt="Verse sashimi"
+                  src="/gerechten/nigiri-tonijn.jpg"
+                  alt="Nigiri tonijn"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="rounded-2xl overflow-hidden aspect-[3/4]">
                 <img
-                  src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=85"
-                  alt="Poké bowl"
+                  src="/gerechten/tokyo-roll.jpg"
+                  alt="Tokyo roll"
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -5,7 +5,7 @@ export function CtaBanner() {
     <section className="relative py-20 overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=1920&q=85"
+          src="/gerechten/rainbow.jpg"
           alt="Sushi"
           className="w-full h-full object-cover"
         />

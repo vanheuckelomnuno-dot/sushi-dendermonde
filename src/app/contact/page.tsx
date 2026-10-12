@@ -19,7 +19,7 @@ export default function ContactPage() {
       {/* Hero */}
       <div className="relative h-48 lg:h-56 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=1920&q=80"
+          src="/gerechten/marin-roll.jpg"
           alt="Contact"
           className="w-full h-full object-cover brightness-40"
         />

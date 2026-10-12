@@ -6,40 +6,36 @@ export function RestaurantSection() {
     <section className="py-20 lg:py-28 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Images — alleen bevestigde sushi foto's */}
+          {/* Images */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-3">
-              {/* Sushi rolls — chef bereiding sfeer */}
               <div className="rounded-2xl overflow-hidden aspect-[3/4]">
                 <img
-                  src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=85"
-                  alt="Sushi bereiding"
+                  src="/gerechten/sama-roll.jpg"
+                  alt="Sushi rolls"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              {/* Japanse soep / bijgerecht */}
               <div className="rounded-2xl overflow-hidden aspect-square">
                 <img
-                  src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=85"
-                  alt="Japans bijgerecht"
+                  src="/gerechten/nigiri-flamed-zalm.jpg"
+                  alt="Nigiri flamed zalm"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
             </div>
             <div className="space-y-3 pt-8">
-              {/* Sashimi / nigiri close-up */}
               <div className="rounded-2xl overflow-hidden aspect-square">
                 <img
-                  src="https://images.unsplash.com/photo-1562802378-063ec186a863?w=400&q=85"
-                  alt="Verse sashimi"
+                  src="/gerechten/sashimi-tonijn.jpg"
+                  alt="Sashimi tonijn"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              {/* Sushi box */}
               <div className="rounded-2xl overflow-hidden aspect-[3/4]">
                 <img
-                  src="https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=600&q=85"
-                  alt="Sushi assortiment"
+                  src="/gerechten/dragon-eye.jpg"
+                  alt="Dragon eye roll"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>

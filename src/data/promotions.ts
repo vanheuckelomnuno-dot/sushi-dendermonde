@@ -12,7 +12,7 @@ export const promoties: Promotie[] = [
     categorieIds: ['combinaties'],
     label: '−20%',
     kleur: 'orange',
-    afbeelding: 'https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=800&q=85',
+    afbeelding: '/gerechten/mix-combo.jpg',
   },
   {
     id: 'promo-002',
@@ -24,7 +24,7 @@ export const promoties: Promotie[] = [
     productIds: ['combo-003'],
     label: 'LUNCH',
     kleur: 'amber',
-    afbeelding: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=800&q=85',
+    afbeelding: '/gerechten/sama-roll.jpg',
   },
   {
     id: 'promo-003',
@@ -36,6 +36,6 @@ export const promoties: Promotie[] = [
     productIds: ['combo-002'],
     label: '−10%',
     kleur: 'rose',
-    afbeelding: 'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=800&q=85',
+    afbeelding: '/gerechten/boot-2p.jpg',
   },
 ]

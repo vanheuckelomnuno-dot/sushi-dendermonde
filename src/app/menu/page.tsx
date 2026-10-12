@@ -15,7 +15,7 @@ export default function MenuPage() {
       {/* Hero */}
       <div className="relative h-56 lg:h-72 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1540648639573-8c848de23f0a?w=1920&q=80"
+          src="/gerechten/mix-combo.jpg"
           alt="Sushi menu"
           className="w-full h-full object-cover brightness-50"
         />

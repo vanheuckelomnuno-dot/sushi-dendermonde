@@ -10,7 +10,7 @@ import { Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function BestellenPage() {
-  const [actieveCategorie, setActieveCategorie] = useState('maki')
+  const [actieveCategorie, setActieveCategorie] = useState('voorgerechten')
   const [zoekterm, setZoekterm] = useState('')
 
   const beschikbareCategorieen = categories.filter((c) => c.beschikbaar)

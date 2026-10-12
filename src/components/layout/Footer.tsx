@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Share2, UtensilsCrossed } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Share2, UtensilsCrossed, ShieldCheck } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -112,9 +112,13 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-white/30">
           <p>© {new Date().getFullYear()} Sushi Dendermonde. Alle rechten voorbehouden.</p>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
             <Link href="#" className="hover:text-white/60 transition-colors">Privacybeleid</Link>
             <Link href="#" className="hover:text-white/60 transition-colors">Algemene voorwaarden</Link>
+            <Link href="/admin" className="flex items-center gap-1.5 hover:text-white/60 transition-colors">
+              <ShieldCheck className="w-3 h-3" />
+              Admin
+            </Link>
           </div>
         </div>
       </div>

@@ -70,25 +70,41 @@ export function ProductModal({ product, open, onClose }: ProductModalProps) {
       <div className="absolute inset-0 bg-charcoal/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
         {/* Image */}
-        <div className="relative aspect-[16/7] shrink-0">
-          <img
-            src={product.afbeelding}
-            alt={product.naam}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-          <div className="absolute bottom-4 left-4 flex gap-1.5">
-            {product.labels.map((label) => (
-              <LabelBadge key={label} label={label} />
-            ))}
+        {product.afbeelding ? (
+          <div className="relative aspect-[16/7] shrink-0">
+            <img
+              src={product.afbeelding}
+              alt={product.naam}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-4 left-4 flex gap-1.5">
+              {product.labels.map((label) => (
+                <LabelBadge key={label} label={label} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center justify-between px-5 pt-5 shrink-0">
+            <div className="flex gap-1.5">
+              {product.labels.map((label) => (
+                <LabelBadge key={label} label={label} />
+              ))}
+            </div>
+            <button
+              onClick={onClose}
+              className="w-9 h-9 bg-cream rounded-full flex items-center justify-center text-charcoal hover:bg-cream-dark transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         {/* Content */}
         <div className="overflow-y-auto flex-1">

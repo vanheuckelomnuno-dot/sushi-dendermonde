@@ -73,6 +73,22 @@ export default function ReserverenPage() {
 
   function bevestig() {
     if (!valideerGegevens()) return
+    try {
+      const bestaande = JSON.parse(localStorage.getItem('sushi-admin-reservaties') || '[]')
+      bestaande.unshift({
+        id: reservatieNummer,
+        naam: `${klant.voornaam} ${klant.achternaam}`,
+        telefoon: klant.telefoon,
+        email: klant.email,
+        datum: geselecteerdeDatum?.toISOString(),
+        tijdstip: geselecteerdTijdstip,
+        personen: aantalPersonen,
+        opmerking: klant.opmerking,
+        status: 'bevestigd',
+        tijdStempel: new Date().toISOString(),
+      })
+      localStorage.setItem('sushi-admin-reservaties', JSON.stringify(bestaande.slice(0, 50)))
+    } catch {}
     setGeplaatst(true)
     setStap('bevestiging')
   }

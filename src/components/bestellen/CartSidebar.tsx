@@ -149,13 +149,20 @@ export function CartSidebar() {
             <span>{formatEuro(cart.totaal)}</span>
           </div>
 
-          <Link
-            href="/checkout"
-            className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
-          >
-            Naar betaling
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {cart.subtotaal < 25 ? (
+            <div className="w-full py-3 bg-cream border border-border rounded-xl text-center">
+              <p className="text-xs text-gray-warm font-medium">Minimum bestelbedrag: <span className="text-accent font-semibold">€25</span></p>
+              <p className="text-[10px] text-gray-warm mt-0.5">Nog {formatEuro(25 - cart.subtotaal)} te gaan</p>
+            </div>
+          ) : (
+            <Link
+              href="/checkout"
+              className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
+            >
+              Naar betaling
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
       )}
     </div>

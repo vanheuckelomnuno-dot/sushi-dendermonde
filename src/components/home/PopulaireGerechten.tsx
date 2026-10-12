@@ -35,23 +35,25 @@ export function PopulaireGerechten() {
               href="/bestellen"
               className="group bg-white rounded-2xl overflow-hidden border border-border hover:border-accent/30 hover:shadow-lg transition-all duration-300"
             >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={product.afbeelding}
-                  alt={product.naam}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-3 left-3 flex gap-1.5">
-                  {product.labels.map((label) => (
-                    <LabelBadge key={label} label={label} />
-                  ))}
-                </div>
-                {product.promoPercentage && (
-                  <div className="absolute top-3 right-3 bg-accent text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                    −{product.promoPercentage}%
+              {product.afbeelding && (
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={product.afbeelding}
+                    alt={product.naam}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3 flex gap-1.5">
+                    {product.labels.map((label) => (
+                      <LabelBadge key={label} label={label} />
+                    ))}
                   </div>
-                )}
-              </div>
+                  {product.promoPercentage && (
+                    <div className="absolute top-3 right-3 bg-accent text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      −{product.promoPercentage}%
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="p-5">
                 <h3 className="font-medium text-charcoal mb-1 group-hover:text-accent transition-colors">
                   {product.naam}

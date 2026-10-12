@@ -16,7 +16,7 @@ export interface Product {
   naam: string
   beschrijving: string
   prijs: number
-  afbeelding: string
+  afbeelding?: string
   categorie: string
   ingredienten: string[]
   allergenen: Allergen[]

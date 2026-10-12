@@ -83,10 +83,26 @@ export default function CheckoutPage() {
 
   async function bevestigBetaling() {
     setStap('verwerking')
-    // Mock payment flow — in productie: call payment provider API
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    const succes = Math.random() > 0.1 // 90% success rate in demo
+    const succes = Math.random() > 0.1
     if (succes) {
+      try {
+        const bestaande = JSON.parse(localStorage.getItem('sushi-admin-orders') || '[]')
+        bestaande.unshift({
+          id: orderId,
+          tijdstip: new Date().toISOString(),
+          klant: `${form.voornaam} ${form.achternaam}`,
+          telefoon: form.telefoon,
+          email: form.email,
+          type: form.bestelType,
+          adres: form.bestelType === 'levering' ? `${form.adres}, ${form.postcode} ${form.stad}` : '',
+          items: cart.items.map((i) => ({ naam: i.product.naam, aantal: i.aantal, prijs: i.product.prijs })),
+          totaal: cart.totaal,
+          opmerking: form.opmerking,
+          status: 'nieuw',
+        })
+        localStorage.setItem('sushi-admin-orders', JSON.stringify(bestaande.slice(0, 50)))
+      } catch {}
       clearCart()
       setStap('succes')
     } else {

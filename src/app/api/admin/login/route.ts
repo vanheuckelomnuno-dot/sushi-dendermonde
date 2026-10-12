@@ -9,8 +9,8 @@ const MAX_ATTEMPTS = 5
 const LOCKOUT_MS = 15 * 60 * 1000
 
 // Store credential hashes — plaintext never compared directly
-const CORRECT_USER_HASH = crypto.createHash('sha256').update('Nuno').digest()
-const CORRECT_PASS_HASH = crypto.createHash('sha256').update('Nuno.vh').digest()
+const CORRECT_USER_HASH = crypto.createHash('sha256').update('sushi').digest()
+const CORRECT_PASS_HASH = crypto.createHash('sha256').update('Sushi2025!').digest()
 
 function getIp(req: NextRequest): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'

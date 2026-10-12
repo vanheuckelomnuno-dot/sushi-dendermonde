@@ -16,11 +16,7 @@ interface KlantForm {
   achternaam: string
   email: string
   telefoon: string
-  adres: string
-  stad: string
-  postcode: string
   opmerking: string
-  bestelType: 'afhalen' | 'levering'
 }
 
 const betaalMethoden: { id: BetaalMethode; label: string; icon: React.ReactNode; beschrijving: string }[] = [
@@ -42,11 +38,7 @@ export default function CheckoutPage() {
     achternaam: '',
     email: '',
     telefoon: '',
-    adres: '',
-    stad: '',
-    postcode: '',
     opmerking: '',
-    bestelType: 'afhalen',
   })
 
   if (cart.items.length === 0 && stap !== 'succes') {
@@ -68,11 +60,6 @@ export default function CheckoutPage() {
     if (!form.achternaam.trim()) nieuwErrors.achternaam = 'Verplicht'
     if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nieuwErrors.email = 'Geldig e-mailadres vereist'
     if (!form.telefoon.trim() || form.telefoon.length < 9) nieuwErrors.telefoon = 'Geldig telefoonnummer vereist'
-    if (form.bestelType === 'levering') {
-      if (!form.adres.trim()) nieuwErrors.adres = 'Verplicht bij levering'
-      if (!form.stad.trim()) nieuwErrors.stad = 'Verplicht bij levering'
-      if (!form.postcode.trim()) nieuwErrors.postcode = 'Verplicht bij levering'
-    }
     setErrors(nieuwErrors)
     return Object.keys(nieuwErrors).length === 0
   }
@@ -94,10 +81,9 @@ export default function CheckoutPage() {
           klant: `${form.voornaam} ${form.achternaam}`,
           telefoon: form.telefoon,
           email: form.email,
-          type: form.bestelType,
-          adres: form.bestelType === 'levering' ? `${form.adres}, ${form.postcode} ${form.stad}` : '',
+          type: 'afhalen',
           items: cart.items.map((i) => ({ naam: i.product.naam, aantal: i.aantal, prijs: i.product.prijs })),
-          totaal: cart.totaal,
+          totaal: cart.subtotaal,
           opmerking: form.opmerking,
           status: 'nieuw',
         })
@@ -148,19 +134,15 @@ export default function CheckoutPage() {
               <span className="text-charcoal">{form.voornaam} {form.achternaam}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-warm">Type</span>
-              <span className="text-charcoal capitalize">{form.bestelType}</span>
-            </div>
-            <div className="flex justify-between text-sm">
               <span className="text-gray-warm">Totaal</span>
-              <span className="font-semibold text-charcoal">{formatEuro(cart.totaal || 0)}</span>
+              <span className="font-semibold text-charcoal">{formatEuro(cart.subtotaal || 0)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-warm">Status</span>
               <span className="text-emerald-600 font-medium">Bevestigd</span>
             </div>
           </div>
-          <p className="text-sm text-gray-warm mb-6">Verwachte tijd: <strong className="text-charcoal">20–30 minuten</strong></p>
+          <p className="text-sm text-gray-warm mb-6">Klaar om af te halen: <strong className="text-charcoal">±20 minuten</strong></p>
           <Link
             href="/"
             className="inline-flex items-center justify-center w-full py-3 bg-accent text-white rounded-xl font-medium hover:bg-accent-dark transition-colors"
@@ -226,28 +208,8 @@ export default function CheckoutPage() {
           <div>
             {stap === 'gegevens' && (
               <div className="bg-white rounded-2xl border border-border p-6 lg:p-8">
-                <h2 className="font-semibold text-charcoal text-lg mb-6">Jouw gegevens</h2>
-
-                {/* Besteltype */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-charcoal mb-3">Hoe wil je je bestelling ontvangen?</label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {(['afhalen', 'levering'] as const).map((type) => (
-                      <button
-                        key={type}
-                        onClick={() => update('bestelType', type)}
-                        className={cn(
-                          'py-3 px-4 rounded-xl border text-sm font-medium transition-all capitalize',
-                          form.bestelType === type
-                            ? 'border-accent bg-accent/5 text-accent'
-                            : 'border-border text-gray-warm hover:border-charcoal'
-                        )}
-                      >
-                        {type === 'afhalen' ? '🏪 Afhalen' : '🚚 Bezorging'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <h2 className="font-semibold text-charcoal text-lg mb-2">Jouw gegevens</h2>
+                <p className="text-sm text-gray-warm mb-6">Je bestelling wordt klaargemaakt voor afhaling.</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
@@ -270,33 +232,6 @@ export default function CheckoutPage() {
                       {errors[veld] && <p className="text-red-500 text-xs mt-1">{errors[veld]}</p>}
                     </div>
                   ))}
-
-                  {form.bestelType === 'levering' && (
-                    <>
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs font-medium text-charcoal mb-1.5">Adres</label>
-                        <input
-                          type="text"
-                          value={form.adres}
-                          onChange={(e) => update('adres', e.target.value)}
-                          className={cn('w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors', errors.adres ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent')}
-                        />
-                        {errors.adres && <p className="text-red-500 text-xs mt-1">{errors.adres}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-charcoal mb-1.5">Postcode</label>
-                        <input type="text" value={form.postcode} onChange={(e) => update('postcode', e.target.value)}
-                          className={cn('w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none', errors.postcode ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent')} />
-                        {errors.postcode && <p className="text-red-500 text-xs mt-1">{errors.postcode}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-charcoal mb-1.5">Stad</label>
-                        <input type="text" value={form.stad} onChange={(e) => update('stad', e.target.value)}
-                          className={cn('w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none', errors.stad ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent')} />
-                        {errors.stad && <p className="text-red-500 text-xs mt-1">{errors.stad}</p>}
-                      </div>
-                    </>
-                  )}
 
                   <div className="sm:col-span-2">
                     <label className="block text-xs font-medium text-charcoal mb-1.5">Opmerking (optioneel)</label>
@@ -375,7 +310,7 @@ export default function CheckoutPage() {
                   onClick={bevestigBetaling}
                   className="w-full py-3.5 bg-accent text-white rounded-xl font-semibold hover:bg-accent-dark transition-colors"
                 >
-                  Betaal {formatEuro(cart.totaal)} via {betaalMethoden.find(m => m.id === geselecteerdeBetaalMethode)?.label}
+                  Betaal {formatEuro(cart.subtotaal)} via {betaalMethoden.find(m => m.id === geselecteerdeBetaalMethode)?.label}
                 </button>
               </div>
             )}
@@ -400,21 +335,9 @@ export default function CheckoutPage() {
                 )
               })}
             </div>
-            <div className="border-t border-border pt-3 space-y-2">
-              <div className="flex justify-between text-sm text-gray-warm">
-                <span>Subtotaal</span><span>{formatEuro(cart.subtotaal)}</span>
-              </div>
-              {cart.korting > 0 && (
-                <div className="flex justify-between text-sm text-emerald-600">
-                  <span>Korting</span><span>−{formatEuro(cart.korting)}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-sm text-gray-warm">
-                <span>Bezorgkosten</span>
-                <span>{cart.bezorgkosten === 0 ? <span className="text-emerald-600">Gratis</span> : formatEuro(cart.bezorgkosten)}</span>
-              </div>
-              <div className="flex justify-between font-semibold text-charcoal pt-1">
-                <span>Totaal</span><span>{formatEuro(cart.totaal)}</span>
+            <div className="border-t border-border pt-3">
+              <div className="flex justify-between font-semibold text-charcoal">
+                <span>Totaal</span><span>{formatEuro(cart.subtotaal)}</span>
               </div>
             </div>
           </div>

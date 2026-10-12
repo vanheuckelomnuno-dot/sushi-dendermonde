@@ -15,11 +15,10 @@ export function CtaBanner() {
         <p className="text-accent text-sm font-medium uppercase tracking-widest mb-4">Klaar om te bestellen?</p>
         <h2 className="text-3xl lg:text-5xl font-light text-white mb-6">
           Verse sushi,<br />
-          <span className="font-semibold">aan huis bezorgd</span>
+          <span className="font-semibold">elke dag vers bereid</span>
         </h2>
         <p className="text-white/60 text-base mb-10 leading-relaxed">
-          Bestel online en geniet van dezelfde kwaliteit als in het restaurant — thuis, op jouw moment.
-          Gratis bezorging vanaf €30.
+          Bestel online en haal af op het restaurant. Klaar in 20 minuten.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

@@ -1,4 +1,4 @@
-import { Leaf, Clock, Star, Truck } from 'lucide-react'
+import { Leaf, Clock, Star, MapPin } from 'lucide-react'
 
 const features = [
   {
@@ -12,14 +12,14 @@ const features = [
     tekst: 'Sashimi-grade producten van de beste leveranciers',
   },
   {
-    icon: Truck,
-    titel: 'Snelle levering',
-    tekst: 'Gratis bezorging vanaf €30',
-  },
-  {
     icon: Clock,
     titel: 'Klaar in 20 min',
-    tekst: 'Afhalen of laten bezorgen',
+    tekst: 'Bestellen & afhalen op het restaurant',
+  },
+  {
+    icon: MapPin,
+    titel: 'Dendermonde',
+    tekst: 'Centraal gelegen, makkelijk bereikbaar',
   },
 ]
 

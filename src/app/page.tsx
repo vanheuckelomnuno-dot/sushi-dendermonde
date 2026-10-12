@@ -2,7 +2,6 @@ import { HeroSection } from '@/components/home/HeroSection'
 import { FeatureStrip } from '@/components/home/FeatureStrip'
 import { PopulaireGerechten } from '@/components/home/PopulaireGerechten'
 import { GalerieSection } from '@/components/home/GalerieSection'
-import { PromotiesSection } from '@/components/home/PromotiesSection'
 import { RestaurantSection } from '@/components/home/RestaurantSection'
 import { CtaBanner } from '@/components/home/CtaBanner'
 
@@ -13,7 +12,6 @@ export default function HomePage() {
       <FeatureStrip />
       <PopulaireGerechten />
       <GalerieSection />
-      <PromotiesSection />
       <RestaurantSection />
       <CtaBanner />
     </>

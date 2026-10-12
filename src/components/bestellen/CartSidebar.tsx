@@ -1,10 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Tag } from 'lucide-react'
+import { ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro } from '@/lib/utils'
-import { cn } from '@/lib/utils'
 
 export function CartSidebar() {
   const { cart, removeItem, updateAantal, aantalItems } = useCart()
@@ -45,13 +44,19 @@ export function CartSidebar() {
               return (
                 <div key={item.itemId} className="px-5 py-4">
                   <div className="flex gap-3">
-                    <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0">
-                      <img
-                        src={item.product.afbeelding}
-                        alt={item.product.naam}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    {item.product.afbeelding ? (
+                      <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0">
+                        <img
+                          src={item.product.afbeelding}
+                          alt={item.product.naam}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-cream shrink-0 flex items-center justify-center">
+                        <ShoppingBag className="w-5 h-5 text-gray-warm" />
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-charcoal truncate">{item.product.naam}</p>
                       {item.opties && item.opties.length > 0 && (
@@ -100,59 +105,15 @@ export function CartSidebar() {
       {/* Summary */}
       {cart.items.length > 0 && (
         <div className="border-t border-border p-5 space-y-3 shrink-0">
-          {/* Promo code */}
-          <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-warm" />
-              <input
-                type="text"
-                placeholder="Promotiecode"
-                className="w-full pl-8 pr-3 py-2 text-xs border border-border rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <button className="px-3 py-2 text-xs border border-border rounded-lg hover:border-charcoal transition-colors font-medium text-charcoal">
-              Toepassen
-            </button>
-          </div>
-
-          {/* Totalen */}
-          <div className="space-y-1.5 pt-1">
-            <div className="flex justify-between text-sm text-gray-warm">
-              <span>Subtotaal</span>
-              <span>{formatEuro(cart.subtotaal)}</span>
-            </div>
-            {cart.korting > 0 && (
-              <div className="flex justify-between text-sm text-emerald-600">
-                <span>Korting</span>
-                <span>−{formatEuro(cart.korting)}</span>
-              </div>
-            )}
-            <div className="flex justify-between text-sm text-gray-warm">
-              <span>Bezorgkosten</span>
-              <span>
-                {cart.bezorgkosten === 0 ? (
-                  <span className="text-emerald-600">Gratis</span>
-                ) : (
-                  formatEuro(cart.bezorgkosten)
-                )}
-              </span>
-            </div>
-            {cart.subtotaal < 30 && (
-              <p className="text-[10px] text-gray-warm">
-                Nog {formatEuro(30 - cart.subtotaal)} voor gratis bezorging
-              </p>
-            )}
-          </div>
-
-          <div className="flex justify-between font-semibold text-charcoal pt-2 border-t border-border">
+          <div className="flex justify-between font-semibold text-charcoal">
             <span>Totaal</span>
-            <span>{formatEuro(cart.totaal)}</span>
+            <span>{formatEuro(cart.subtotaal)}</span>
           </div>
 
-          {cart.subtotaal < 25 ? (
+          {cart.subtotaal < 15 ? (
             <div className="w-full py-3 bg-cream border border-border rounded-xl text-center">
-              <p className="text-xs text-gray-warm font-medium">Minimum bestelbedrag: <span className="text-accent font-semibold">€25</span></p>
-              <p className="text-[10px] text-gray-warm mt-0.5">Nog {formatEuro(25 - cart.subtotaal)} te gaan</p>
+              <p className="text-xs text-gray-warm font-medium">Minimum bestelbedrag: <span className="text-accent font-semibold">€15</span></p>
+              <p className="text-[10px] text-gray-warm mt-0.5">Nog {formatEuro(15 - cart.subtotaal)} te gaan</p>
             </div>
           ) : (
             <Link

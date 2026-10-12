@@ -13,17 +13,14 @@ type CartAction =
   | { type: 'CLEAR_CART' }
   | { type: 'SET_PROMO'; code: string; korting: number }
 
-const BEZORGKOSTEN = 2.5
-const GRATIS_BEZORGING_DREMPEL = 30
-
 function berekenTotalen(items: CartItem[], korting: number) {
   const subtotaal = items.reduce((acc, item) => {
     const optiesMeerprijs = item.opties?.reduce((sum, o) => sum + o.meerprijs, 0) ?? 0
     return acc + (item.product.prijs + optiesMeerprijs) * item.aantal
   }, 0)
 
-  const bezorgkosten = subtotaal >= GRATIS_BEZORGING_DREMPEL ? 0 : items.length > 0 ? BEZORGKOSTEN : 0
-  const totaal = Math.max(0, subtotaal - korting + bezorgkosten)
+  const bezorgkosten = 0
+  const totaal = Math.max(0, subtotaal - korting)
 
   return { subtotaal, bezorgkosten, totaal }
 }

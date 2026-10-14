@@ -1,0 +1,23 @@
+import mysql from 'mysql2/promise'
+
+// Singleton pool — hergebruikt verbindingen over API-aanroepen heen
+declare global {
+  // eslint-disable-next-line no-var
+  var _mysqlPool: mysql.Pool | undefined
+}
+
+export function getPool(): mysql.Pool {
+  if (!global._mysqlPool) {
+    global._mysqlPool = mysql.createPool({
+      host:               process.env.DB_HOST,
+      port:               Number(process.env.DB_PORT ?? 3306),
+      user:               process.env.DB_USER,
+      password:           process.env.DB_PASSWORD,
+      database:           process.env.DB_NAME,
+      waitForConnections: true,
+      connectionLimit:    5,
+      connectTimeout:     10_000,
+    })
+  }
+  return global._mysqlPool
+}

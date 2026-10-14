@@ -64,7 +64,7 @@ export default function ReserverenPage() {
     const nieuwErrors: Partial<KlantGegevens> = {}
     if (!klant.voornaam.trim()) nieuwErrors.voornaam = 'Verplicht'
     if (!klant.achternaam.trim()) nieuwErrors.achternaam = 'Verplicht'
-    if (!klant.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(klant.email)) nieuwErrors.email = 'Geldig e-mailadres vereist'
+    if (!klant.email.trim() || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(klant.email.trim())) nieuwErrors.email = 'Geldig e-mailadres vereist'
     if (!klant.telefoon.trim() || klant.telefoon.length < 9) nieuwErrors.telefoon = 'Geldig nummer vereist'
     setErrors(nieuwErrors)
     return Object.keys(nieuwErrors).length === 0
@@ -102,10 +102,9 @@ export default function ReserverenPage() {
             <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-8 h-8 text-emerald-500" />
             </div>
-            <h1 className="text-2xl font-semibold text-charcoal mb-2">Reservatie bevestigd!</h1>
+            <h1 className="text-2xl font-semibold text-charcoal mb-2">Aanvraag ontvangen!</h1>
             <p className="text-gray-warm mb-6">
-              Je reservatie is ontvangen. We bevestigen telefonisch via{' '}
-              <strong>052 20 06 77</strong>.
+              Je reservatieaanvraag is geregistreerd. Tot ziens bij Ni Sushi!
             </p>
 
             <div className="bg-cream rounded-xl p-5 mb-6 text-left space-y-3">

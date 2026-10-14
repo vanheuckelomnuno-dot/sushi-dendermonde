@@ -20,10 +20,12 @@ export function MobileCartButton() {
           className="fixed bottom-6 right-4 z-40 flex items-center gap-3 bg-accent text-white px-5 py-3.5 rounded-full shadow-xl hover:bg-accent-dark transition-all active:scale-95"
         >
           <ShoppingBag className="w-4 h-4" />
-          <span className="font-medium text-sm">{formatEuro(cart.totaal)}</span>
-          <span className="bg-white text-accent text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-            {aantalItems}
-          </span>
+          <span className="font-medium text-sm">{formatEuro(cart.subtotaal)}</span>
+          {aantalItems > 0 && (
+            <span className="bg-white text-accent text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center leading-none">
+              {aantalItems}
+            </span>
+          )}
         </button>
       )}
 

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Share2, ShieldCheck } from 'lucide-react'
+import { MapPin, Phone, Mail, Share2 } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -94,10 +94,6 @@ export function Footer() {
           <div className="flex items-center gap-6">
             <Link href="#" className="hover:text-white/60 transition-colors">Privacybeleid</Link>
             <Link href="#" className="hover:text-white/60 transition-colors">Algemene voorwaarden</Link>
-            <Link href="/admin" className="flex items-center gap-1.5 hover:text-white/60 transition-colors">
-              <ShieldCheck className="w-3 h-3" />
-              Admin
-            </Link>
           </div>
         </div>
       </div>

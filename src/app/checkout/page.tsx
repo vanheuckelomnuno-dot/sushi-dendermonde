@@ -73,22 +73,6 @@ export default function CheckoutPage() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     const succes = Math.random() > 0.1
     if (succes) {
-      try {
-        const bestaande = JSON.parse(localStorage.getItem('sushi-admin-orders') || '[]')
-        bestaande.unshift({
-          id: orderId,
-          tijdstip: new Date().toISOString(),
-          klant: `${form.voornaam} ${form.achternaam}`,
-          telefoon: form.telefoon,
-          email: form.email,
-          type: 'afhalen',
-          items: cart.items.map((i) => ({ naam: i.product.naam, aantal: i.aantal, prijs: i.product.prijs })),
-          totaal: cart.subtotaal,
-          opmerking: form.opmerking,
-          status: 'nieuw',
-        })
-        localStorage.setItem('sushi-admin-orders', JSON.stringify(bestaande.slice(0, 50)))
-      } catch {}
       clearCart()
       setStap('succes')
     } else {

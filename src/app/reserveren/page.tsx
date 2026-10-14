@@ -104,7 +104,7 @@ export default function ReserverenPage() {
             </div>
             <h1 className="text-2xl font-semibold text-charcoal mb-2">Aanvraag ontvangen!</h1>
             <p className="text-gray-warm mb-6">
-              Je reservatieaanvraag is geregistreerd. Tot ziens bij Ni Sushi!
+              Je reservatieaanvraag is geregistreerd. Tot ziens bij Sushi Dendermonde!
             </p>
 
             <div className="bg-cream rounded-xl p-5 mb-6 text-left space-y-3">

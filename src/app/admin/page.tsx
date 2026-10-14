@@ -67,7 +67,15 @@ export default function AdminPage() {
   const [actieveTab, setActieveTab] = useState<'orders' | 'reservaties' | 'tafels'>('orders')
   const [aantalNieuw, setAantalNieuw] = useState(0)
   const [laatstGeladen, setLaatstGeladen] = useState<Date | null>(null)
-  const [toegang, setToegang] = useState(true)
+  const [toegang, setToegang] = useState(false)
+
+  useEffect(() => {
+    if (sessionStorage.getItem('admin_ok') !== '1') {
+      router.replace('/admin/login')
+    } else {
+      setToegang(true)
+    }
+  }, [router])
 
   const laadData = useCallback(() => {
     try {
@@ -136,6 +144,7 @@ export default function AdminPage() {
 
   const bezetteTafels = new Set(vandaagReservaties.filter((r) => r.tafel && r.status !== 'afgerond').map((r) => r.tafel))
 
+  if (!toegang) return null
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -156,8 +165,8 @@ export default function AdminPage() {
             <RefreshCw className="w-4 h-4 text-white" />
           </button>
           <button
-            onClick={async () => {
-              await fetch('/api/admin/logout', { method: 'POST' })
+            onClick={() => {
+              sessionStorage.removeItem('admin_ok')
               router.push('/admin/login')
             }}
             className="p-2 rounded-lg bg-white/10 hover:bg-red-500/30 transition-colors"

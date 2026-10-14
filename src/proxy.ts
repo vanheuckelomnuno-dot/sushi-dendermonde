@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  if (pathname === '/admin/login') return NextResponse.next()
-
-  const session = req.cookies.get('admin_session')?.value
-  if (!session) {
-    return NextResponse.redirect(new URL('/admin/login', req.url))
-  }
-
+export function proxy(_req: NextRequest) {
   return NextResponse.next()
 }
 

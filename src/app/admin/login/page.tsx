@@ -27,6 +27,7 @@ export default function AdminLoginPage() {
       const data = await res.json()
 
       if (res.ok && data.ok) {
+        sessionStorage.setItem('admin_ok', '1')
         router.push('/admin')
       } else {
         setFout(data.error ?? 'Inloggen mislukt.')

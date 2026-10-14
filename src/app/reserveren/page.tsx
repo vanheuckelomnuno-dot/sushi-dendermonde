@@ -6,7 +6,6 @@ import { nl } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Clock, Users, Calendar, CheckCircle2 } from 'lucide-react'
 import { generateReservatieNummer } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import { Reservatie } from '@/types/reservation'
 
 type ReservatieStap = 'datum' | 'personen' | 'tijd' | 'gegevens' | 'bevestiging'
 
@@ -71,8 +70,24 @@ export default function ReserverenPage() {
     return Object.keys(nieuwErrors).length === 0
   }
 
-  function bevestig() {
+  async function bevestig() {
     if (!valideerGegevens()) return
+    try {
+      await fetch('/api/reservaties', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reservatieNummer,
+          naam: `${klant.voornaam} ${klant.achternaam}`,
+          telefoon: klant.telefoon,
+          email: klant.email,
+          datum: geselecteerdeDatum?.toISOString(),
+          tijdstip: geselecteerdTijdstip,
+          personen: aantalPersonen,
+          opmerking: klant.opmerking,
+        }),
+      })
+    } catch {}
     setGeplaatst(true)
     setStap('bevestiging')
   }

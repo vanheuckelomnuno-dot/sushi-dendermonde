@@ -24,9 +24,9 @@ export function HeroSection() {
         </div>
 
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white mb-6 leading-tight">
-          <span className="font-semibold">Elke dag vers</span>
+          <span className="text-accent font-semibold">Sushi Dendermonde</span>
           <br />
-          bereid
+          <span className="font-semibold">elke dag vers</span>
         </h1>
 
         <p className="text-white/70 text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed font-light">

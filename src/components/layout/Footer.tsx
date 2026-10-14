@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Share2, UtensilsCrossed, ShieldCheck } from 'lucide-react'
+import { MapPin, Phone, Mail, Share2, UtensilsCrossed, ShieldCheck } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -17,9 +17,6 @@ export function Footer() {
                 <span className="font-light text-white/60 text-lg leading-none ml-1.5">Dendermonde</span>
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-white/50 mb-6">
-              Vers, authentiek en met passie bereid. Elke dag de beste sushi van Dendermonde.
-            </p>
             <div className="flex gap-3">
               <a
                 href="#"
@@ -64,24 +61,12 @@ export function Footer() {
             <h3 className="text-white font-medium mb-4 text-sm uppercase tracking-wider">Openingstijden</h3>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between gap-4">
-                <span>Ma–Do</span>
-                <span className="text-white/40">11:30 – 21:30</span>
+                <span>Maandag</span>
+                <span className="text-white/40">Gesloten</span>
               </li>
               <li className="flex justify-between gap-4">
-                <span>Vrijdag</span>
-                <span className="text-white/40">11:30 – 22:30</span>
-              </li>
-              <li className="flex justify-between gap-4">
-                <span>Zaterdag</span>
-                <span className="text-white/40">12:00 – 22:30</span>
-              </li>
-              <li className="flex justify-between gap-4">
-                <span>Zondag</span>
-                <span className="text-white/40">12:00 – 21:00</span>
-              </li>
-              <li className="pt-2 text-accent text-xs flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                <span>Keuken sluit 30 min eerder</span>
+                <span>Di – Zo</span>
+                <span className="text-white/40">16:00 – 21:00</span>
               </li>
             </ul>
           </div>
@@ -92,12 +77,12 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                <span>Grote Markt 42<br />9200 Dendermonde</span>
+                <span>Statieplein 34<br />9200 Dendermonde</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-accent shrink-0" />
-                <a href="tel:+3252123456" className="hover:text-white transition-colors">
-                  +32 52 12 34 56
+                <a href="tel:+3252200677" className="hover:text-white transition-colors">
+                  052 20 06 77
                 </a>
               </li>
               <li className="flex items-center gap-2.5">

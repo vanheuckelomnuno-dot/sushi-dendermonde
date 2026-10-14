@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { ShoppingBag, Menu, X, UtensilsCrossed } from 'lucide-react'
+import { ShoppingBag, Menu, X } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { cn } from '@/lib/utils'
 
@@ -44,30 +44,15 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className={cn(
-              'w-8 h-8 rounded-full flex items-center justify-center transition-colors',
-              isTransparent ? 'bg-white/20' : 'bg-accent/10'
-            )}>
-              <UtensilsCrossed className={cn(
-                'w-4 h-4 transition-colors',
-                isTransparent ? 'text-white' : 'text-accent'
-              )} />
-            </div>
-            <div>
-              <span className={cn(
-                'font-semibold text-lg tracking-tight leading-none transition-colors',
-                isTransparent ? 'text-white' : 'text-charcoal'
-              )}>
-                Sushi
-              </span>
-              <span className={cn(
-                'font-light text-lg leading-none ml-1.5 transition-colors',
-                isTransparent ? 'text-white/80' : 'text-gray-warm'
-              )}>
-                Dendermonde
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <img
+              src="/logo.png"
+              alt="Sushi Dendermonde"
+              className={cn(
+                'h-10 w-auto object-contain transition-all',
+                isTransparent ? 'brightness-0 invert' : ''
+              )}
+            />
           </Link>
 
           {/* Desktop nav */}

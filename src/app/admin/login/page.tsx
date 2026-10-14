@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { UtensilsCrossed, Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 
 const WACHTWOORD = 'Sushi2025!'
 
@@ -33,14 +33,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-charcoal flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-            <UtensilsCrossed className="w-5 h-5 text-accent" />
-          </div>
-          <div>
-            <span className="font-semibold text-white text-xl leading-none">Sushi</span>
-            <span className="font-light text-white/50 text-xl leading-none ml-1.5">Dendermonde</span>
-          </div>
+        <div className="flex justify-center mb-8">
+          <img src="/logo.png" alt="Sushi Dendermonde" className="h-12 w-auto object-contain brightness-0 invert" />
         </div>
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-8">

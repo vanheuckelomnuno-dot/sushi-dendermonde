@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronDown, UtensilsCrossed } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 
 export function HeroSection() {
   return (
@@ -16,15 +16,6 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div className="flex justify-center mb-8">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm flex items-center justify-center">
-              <UtensilsCrossed className="w-7 h-7 text-white" />
-            </div>
-            <div className="h-px w-12 bg-accent" />
-          </div>
-        </div>
-
         <div className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <span className="text-white/80 text-xs font-medium tracking-wider uppercase">
@@ -33,14 +24,13 @@ export function HeroSection() {
         </div>
 
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white mb-6 leading-tight">
-          Authentieke sushi,
+          <span className="font-semibold">Elke dag vers</span>
           <br />
-          <span className="font-semibold">elke dag vers</span>
+          bereid
         </h1>
 
         <p className="text-white/70 text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed font-light">
-          Verse ingrediënten, traditionele bereiding en een passie voor Japanse keuken.
-          Bestel online of kom gezellig langs.
+          Verse ingrediënten en traditionele bereiding. Bestel online voor afhaling of kom gezellig langs.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

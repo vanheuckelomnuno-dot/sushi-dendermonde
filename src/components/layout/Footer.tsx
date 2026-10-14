@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Share2, UtensilsCrossed, ShieldCheck } from 'lucide-react'
+import { MapPin, Phone, Mail, Share2, ShieldCheck } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -8,14 +8,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                <UtensilsCrossed className="w-4 h-4 text-accent" />
-              </div>
-              <div>
-                <span className="font-semibold text-white text-lg leading-none">Sushi</span>
-                <span className="font-light text-white/60 text-lg leading-none ml-1.5">Dendermonde</span>
-              </div>
+            <div className="mb-4">
+              <img src="/logo.png" alt="Sushi Dendermonde" className="h-10 w-auto object-contain brightness-0 invert" />
             </div>
             <div className="flex gap-3">
               <a

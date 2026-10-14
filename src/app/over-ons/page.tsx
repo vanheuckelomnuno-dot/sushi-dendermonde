@@ -9,7 +9,6 @@ const waarden = [
   { titel: 'Versheid boven alles', tekst: 'Elke dag verse vis, direct van onze leveranciers. Geen compromissen.' },
   { titel: 'Traditionele technieken', tekst: 'Onze chefs zijn opgeleid in Japanse sushi-tradities met jarenlange ervaring.' },
   { titel: 'Lokale betrokkenheid', tekst: 'We werken graag samen met lokale producenten voor verse groenten en kruiden.' },
-  { titel: 'Duurzaamheid', tekst: 'Bewuste keuzes voor vis en verpakkingen. Goed voor jou én de planeet.' },
 ]
 
 export default function OverOnsPage() {
@@ -118,7 +117,7 @@ export default function OverOnsPage() {
           <h2 className="text-2xl font-light text-white mb-3">
             Klaar om te <span className="font-semibold">proeven</span>?
           </h2>
-          <p className="text-white/60 mb-6 text-sm">Bestel thuis of kom gezellig langs in ons restaurant.</p>
+          <p className="text-white/60 mb-6 text-sm">Bestel online voor afhaling of kom gezellig langs in ons restaurant.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/bestellen"

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import type { RowDataPacket } from 'mysql2'
 import { getPool } from '@/lib/db'
 
-// ── Rate limiting ──────────────────────────────────────────────────────────────
+// ── Rate limiting: publieke POST (reservaties) ────────────────────────────────
 declare global {
   // eslint-disable-next-line no-var
   var _rateMap: Map<string, { count: number; reset: number }> | undefined
@@ -24,14 +24,59 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-// ── Admin PIN ──────────────────────────────────────────────────────────────────
-function checkPin(req: NextRequest): boolean {
-  const pin = process.env.BEHEER_PIN ?? 'Sushi2025!'
-  return req.headers.get('x-pin') === pin
+// ── Brute-force bescherming: admin PIN-pogingen (H1) ──────────────────────────
+declare global {
+  // eslint-disable-next-line no-var
+  var _pinFailMap: Map<string, { count: number; blockedUntil: number }> | undefined
+}
+function getPinFailMap() {
+  if (!global._pinFailMap) global._pinFailMap = new Map()
+  return global._pinFailMap
+}
+
+// Geeft null terug bij correcte PIN, een NextResponse bij fout/blokkering.
+// K1: geen hardcoded fallback meer — als BEHEER_PIN niet is ingesteld weigert
+//     de functie altijd toegang en logt een fout server-side.
+function checkPin(req: NextRequest): NextResponse | null {
+  const pin = process.env.BEHEER_PIN
+  if (!pin) {
+    console.error('[BEVEILIGING] BEHEER_PIN is niet ingesteld als omgevingsvariabele.')
+    return NextResponse.json({ error: 'Beheerpaneel niet beschikbaar' }, { status: 503 })
+  }
+
+  const ip  = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+  const map = getPinFailMap()
+  const now = Date.now()
+  const entry = map.get(ip)
+
+  // IP geblokkeerd na te veel foute pogingen
+  if (entry && now < entry.blockedUntil) {
+    const resterend = Math.ceil((entry.blockedUntil - now) / 60_000)
+    return NextResponse.json(
+      { error: `Te veel pogingen. Probeer over ${resterend} minuten opnieuw.` },
+      { status: 429 }
+    )
+  }
+
+  const correct = req.headers.get('x-pin') === pin
+
+  if (!correct) {
+    // Teller ophogen; blokkeer na 10 foute pogingen voor 15 minuten
+    const huidig = (!entry || now >= entry.blockedUntil) ? 1 : entry.count + 1
+    map.set(ip, {
+      count:        huidig,
+      blockedUntil: huidig >= 10 ? now + 15 * 60_000 : 0,
+    })
+    return NextResponse.json({ error: 'Verboden' }, { status: 403 })
+  }
+
+  // Juiste PIN → reset teller
+  map.delete(ip)
+  return null
 }
 
 // ── Geldige tijdslots ──────────────────────────────────────────────────────────
-const TIJDEN = new Set(['16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'])
+const TIJDEN    = new Set(['16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'])
 const STATUSSEN = new Set(['nieuw','bevestigd','aanwezig','afgerond','geannuleerd'])
 
 // ── Input-validatie ────────────────────────────────────────────────────────────
@@ -48,8 +93,12 @@ function valideer(b: Record<string, unknown>): string | null {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 255)
     return 'Ongeldig e-mailadres'
 
-  if (!b.datum || isNaN(new Date(b.datum as string).getTime()))
-    return 'Ongeldige datum'
+  // H2: datum mag niet in het verleden liggen (server-side check)
+  if (!b.datum) return 'Datum ontbreekt'
+  const datumObj = new Date(b.datum as string)
+  if (isNaN(datumObj.getTime())) return 'Ongeldige datum'
+  const vandaagUtc = new Date(new Date().toISOString().slice(0, 10))
+  if (datumObj < vandaagUtc) return 'Datum mag niet in het verleden liggen'
 
   if (!TIJDEN.has(b.tijdstip as string))
     return 'Ongeldig tijdstip'
@@ -74,32 +123,32 @@ function mapRij(r: RowDataPacket) {
     ? r.aangemaakt_op.toISOString()
     : String(r.aangemaakt_op ?? '')
   return {
-    id:                 String(r.id),
-    reservatieNummer:   r.reservatie_nummer ?? '',
-    naam:               r.naam,
-    telefoon:           r.telefoon,
-    email:              r.email,
+    id:               String(r.id),
+    reservatieNummer: r.reservatie_nummer ?? '',
+    naam:             r.naam,
+    telefoon:         r.telefoon,
+    email:            r.email,
     datum,
-    tijdstip:           r.tijdstip,
-    personen:           r.personen,
-    opmerking:          r.opmerking ?? '',
-    status:             r.status,
+    tijdstip:         r.tijdstip,
+    personen:         r.personen,
+    opmerking:        r.opmerking ?? '',
+    status:           r.status,
     tijdStempel,
   }
 }
 
 // ── GET — admin haalt alle reservaties op ─────────────────────────────────────
 export async function GET(req: NextRequest) {
-  if (!checkPin(req))
-    return NextResponse.json({ error: 'Verboden' }, { status: 403 })
+  const pinFout = checkPin(req)
+  if (pinFout) return pinFout
 
   try {
     const [rows] = await getPool().query<RowDataPacket[]>(
       'SELECT * FROM reservaties ORDER BY aangemaakt_op DESC LIMIT 500'
     )
-    return NextResponse.json((rows).map(mapRij))
+    return NextResponse.json((rows as RowDataPacket[]).map(mapRij))
   } catch (e) {
-    console.error('[GET /api/reservaties]', e)
+    console.error('[GET /api/reservaties]', e instanceof Error ? e.message : 'onbekende fout')
     return NextResponse.json({ error: 'Databasefout' }, { status: 500 })
   }
 }
@@ -143,18 +192,17 @@ export async function POST(req: NextRequest) {
     )
     return NextResponse.json({ ok: true })
   } catch (e: unknown) {
-    // Dubbel reservatienummer (UNIQUE constraint)
     if ((e as NodeJS.ErrnoException & { code?: string }).code === 'ER_DUP_ENTRY')
       return NextResponse.json({ error: 'Dubbele reservatie' }, { status: 409 })
-    console.error('[POST /api/reservaties]', e)
+    console.error('[POST /api/reservaties]', e instanceof Error ? e.message : 'onbekende fout')
     return NextResponse.json({ error: 'Databasefout' }, { status: 500 })
   }
 }
 
 // ── PATCH — admin wijzigt status ──────────────────────────────────────────────
 export async function PATCH(req: NextRequest) {
-  if (!checkPin(req))
-    return NextResponse.json({ error: 'Verboden' }, { status: 403 })
+  const pinFout = checkPin(req)
+  if (pinFout) return pinFout
 
   let body: { id?: unknown; status?: unknown }
   try { body = await req.json() }
@@ -172,15 +220,15 @@ export async function PATCH(req: NextRequest) {
     )
     return NextResponse.json({ ok: true })
   } catch (e) {
-    console.error('[PATCH /api/reservaties]', e)
+    console.error('[PATCH /api/reservaties]', e instanceof Error ? e.message : 'onbekende fout')
     return NextResponse.json({ error: 'Databasefout' }, { status: 500 })
   }
 }
 
 // ── DELETE — admin verwijdert een reservatie ──────────────────────────────────
 export async function DELETE(req: NextRequest) {
-  if (!checkPin(req))
-    return NextResponse.json({ error: 'Verboden' }, { status: 403 })
+  const pinFout = checkPin(req)
+  if (pinFout) return pinFout
 
   let body: { id?: unknown }
   try { body = await req.json() }
@@ -194,7 +242,7 @@ export async function DELETE(req: NextRequest) {
     await getPool().execute('DELETE FROM reservaties WHERE id = ?', [idVal])
     return NextResponse.json({ ok: true })
   } catch (e) {
-    console.error('[DELETE /api/reservaties]', e)
+    console.error('[DELETE /api/reservaties]', e instanceof Error ? e.message : 'onbekende fout')
     return NextResponse.json({ error: 'Databasefout' }, { status: 500 })
   }
 }

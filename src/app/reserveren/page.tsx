@@ -104,7 +104,8 @@ export default function ReserverenPage() {
             </div>
             <h1 className="text-2xl font-semibold text-charcoal mb-2">Reservatie bevestigd!</h1>
             <p className="text-gray-warm mb-6">
-              Een bevestiging wordt verstuurd naar <strong>{klant.email}</strong>
+              Je reservatie is ontvangen. We bevestigen telefonisch via{' '}
+              <strong>052 20 06 77</strong>.
             </p>
 
             <div className="bg-cream rounded-xl p-5 mb-6 text-left space-y-3">

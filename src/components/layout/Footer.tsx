@@ -8,8 +8,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="mb-4">
-              <img src="/logo.png" alt="Sushi Dendermonde" className="h-12 w-auto object-contain brightness-0 invert opacity-90" />
+            <div className="mb-4 inline-block bg-white/95 px-3 py-2 rounded-xl">
+              <img src="/logo.png" alt="Sushi Dendermonde" className="h-10 w-auto object-contain" />
             </div>
             <div className="flex gap-3">
               <a

@@ -10,7 +10,7 @@ import { Reservatie } from '@/types/reservation'
 
 type ReservatieStap = 'datum' | 'personen' | 'tijd' | 'gegevens' | 'bevestiging'
 
-const BESCHIKBARE_TIJDEN = ['12:00', '12:30', '13:00', '13:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30']
+const BESCHIKBARE_TIJDEN = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30']
 const MAX_PERSONEN = 12
 
 const stappen: { id: ReservatieStap; label: string }[] = [
@@ -154,8 +154,8 @@ export default function ReserverenPage() {
             </div>
 
             <p className="text-sm text-gray-warm mb-6">
-              Sushi Dendermonde, Grote Markt 42, 9200 Dendermonde<br />
-              <a href="tel:+3252123456" className="text-accent">+32 52 12 34 56</a>
+              Sushi Dendermonde, Statieplein 34, 9200 Dendermonde<br />
+              <a href="tel:+3252200677" className="text-accent">052 20 06 77</a>
             </p>
 
             <a
@@ -242,15 +242,16 @@ export default function ReserverenPage() {
               {kalenderDagen.map((dag, i) => {
                 if (!dag) return <div key={`empty-${i}`} />
                 const verleden = isBefore(dag, vandaag)
+                const maandag = dag.getDay() === 1
                 const geselecteerd = geselecteerdeDatum?.toDateString() === dag.toDateString()
                 return (
                   <button
                     key={dag.toISOString()}
-                    disabled={verleden}
+                    disabled={verleden || maandag}
                     onClick={() => setGeselecteerdeDatum(dag)}
                     className={cn(
                       'aspect-square rounded-xl text-sm font-medium transition-all',
-                      verleden ? 'text-gray-light cursor-not-allowed' : 'hover:bg-cream',
+                      (verleden || maandag) ? 'text-gray-light cursor-not-allowed' : 'hover:bg-cream',
                       geselecteerd ? 'bg-accent text-white hover:bg-accent-dark' : '',
                       dag.toDateString() === vandaag.toDateString() && !geselecteerd ? 'border border-accent text-accent' : ''
                     )}

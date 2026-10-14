@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
+import { ShoppingBag, Trash2, Plus, Minus, Phone } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro } from '@/lib/utils'
 
@@ -109,21 +108,13 @@ export function CartSidebar() {
             <span>Totaal</span>
             <span>{formatEuro(cart.subtotaal)}</span>
           </div>
-
-          {cart.subtotaal < 15 ? (
-            <div className="w-full py-3 bg-cream border border-border rounded-xl text-center">
-              <p className="text-xs text-gray-warm font-medium">Minimum bestelbedrag: <span className="text-accent font-semibold">€15</span></p>
-              <p className="text-[10px] text-gray-warm mt-0.5">Nog {formatEuro(15 - cart.subtotaal)} te gaan</p>
-            </div>
-          ) : (
-            <Link
-              href="/checkout"
-              className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
-            >
-              Naar betaling
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          )}
+          <a
+            href="tel:+3252200677"
+            className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
+          >
+            <Phone className="w-4 h-4" />
+            Bel ons: 052 20 06 77
+          </a>
         </div>
       )}
     </div>

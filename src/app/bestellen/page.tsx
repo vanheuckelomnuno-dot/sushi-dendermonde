@@ -6,7 +6,7 @@ import { categories } from '@/data/categories'
 import { ProductCard } from '@/components/bestellen/ProductCard'
 import { CartSidebar } from '@/components/bestellen/CartSidebar'
 import { MobileCartButton } from '@/components/bestellen/MobileCartButton'
-import { Search } from 'lucide-react'
+import { Search, Phone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function BestellenPage() {
@@ -26,6 +26,20 @@ export default function BestellenPage() {
 
   return (
     <div className="min-h-screen bg-cream pt-20 lg:pt-24">
+      {/* Banner: online bestellen tijdelijk niet beschikbaar */}
+      <div className="bg-accent text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-center">
+          <span className="font-medium">Online bestellingen zijn tijdelijk niet mogelijk. Stel je bestelling samen en bel ons op:</span>
+          <a
+            href="tel:+3252200677"
+            className="inline-flex items-center gap-1.5 font-bold underline underline-offset-2 hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            052 20 06 77
+          </a>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

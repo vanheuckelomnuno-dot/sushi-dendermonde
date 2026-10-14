@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ShoppingBag, X, ArrowRight, Plus, Minus, Trash2 } from 'lucide-react'
-import Link from 'next/link'
+import { ShoppingBag, X, Phone, Plus, Minus, Trash2 } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro } from '@/lib/utils'
 
@@ -54,8 +53,10 @@ export function MobileCartButton() {
 
                 return (
                   <div key={item.itemId} className="px-5 py-4 flex gap-3">
-                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0">
-                      <img src={item.product.afbeelding} alt={item.product.naam} className="w-full h-full object-cover" />
+                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-cream flex items-center justify-center">
+                      {item.product.afbeelding
+                        ? <img src={item.product.afbeelding} alt={item.product.naam} className="w-full h-full object-cover" />
+                        : <ShoppingBag className="w-5 h-5 text-gray-warm" />}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-charcoal">{item.product.naam}</p>
@@ -85,23 +86,17 @@ export function MobileCartButton() {
             </div>
 
             <div className="p-5 border-t border-border shrink-0 space-y-3">
-              <div className="flex justify-between text-sm text-gray-warm">
-                <span>Subtotaal</span><span>{formatEuro(cart.subtotaal)}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-warm">
-                <span>Bezorging</span>
-                <span>{cart.bezorgkosten === 0 ? <span className="text-emerald-600">Gratis</span> : formatEuro(cart.bezorgkosten)}</span>
-              </div>
               <div className="flex justify-between font-semibold text-charcoal">
-                <span>Totaal</span><span>{formatEuro(cart.totaal)}</span>
+                <span>Totaal</span><span>{formatEuro(cart.subtotaal)}</span>
               </div>
-              <Link
-                href="/checkout"
+              <a
+                href="tel:+3252200677"
                 onClick={() => setOpen(false)}
                 className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
               >
-                Naar betaling <ArrowRight className="w-4 h-4" />
-              </Link>
+                <Phone className="w-4 h-4" />
+                Bel ons: 052 20 06 77
+              </a>
             </div>
           </div>
         </div>

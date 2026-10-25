@@ -1,6 +1,6 @@
 'use client'
 
-import { ShoppingBag, Trash2, Plus, Minus, Phone } from 'lucide-react'
+import { ShoppingBag, Trash2, Plus, Minus, Truck } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro } from '@/lib/utils'
 
@@ -109,11 +109,11 @@ export function CartSidebar() {
             <span>{formatEuro(cart.subtotaal)}</span>
           </div>
           <a
-            href="tel:+3252200677"
+            href="/checkout"
             className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
           >
-            <Phone className="w-4 h-4" />
-            Bel ons: 052 20 06 77
+            <Truck className="w-4 h-4" />
+            Bestelling plaatsen
           </a>
         </div>
       )}

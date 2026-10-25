@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ShoppingBag, X, Phone, Plus, Minus, Trash2 } from 'lucide-react'
+import { ShoppingBag, X, Truck, Plus, Minus, Trash2 } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro } from '@/lib/utils'
 
@@ -92,12 +92,12 @@ export function MobileCartButton() {
                 <span>Totaal</span><span>{formatEuro(cart.subtotaal)}</span>
               </div>
               <a
-                href="tel:+3252200677"
+                href="/checkout"
                 onClick={() => setOpen(false)}
                 className="w-full py-3.5 bg-accent text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-accent-dark transition-colors"
               >
-                <Phone className="w-4 h-4" />
-                Bel ons: 052 20 06 77
+                <Truck className="w-4 h-4" />
+                Bestelling plaatsen
               </a>
             </div>
           </div>

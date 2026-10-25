@@ -1,47 +1,44 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, CreditCard, Smartphone, Building2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Truck } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatEuro, generateOrderId } from '@/lib/utils'
-import { BetaalMethode } from '@/types/order'
 import { cn } from '@/lib/utils'
 
-type CheckoutStap = 'gegevens' | 'betaling' | 'verwerking' | 'succes' | 'mislukt'
-
-interface KlantForm {
-  voornaam: string
-  achternaam: string
-  email: string
-  telefoon: string
-  opmerking: string
+interface LeverForm {
+  voornaam:    string
+  achternaam:  string
+  email:       string
+  telefoon:    string
+  straat:      string
+  huisnummer:  string
+  postcode:    string
+  gemeente:    string
+  opmerking:   string
 }
 
-const betaalMethoden: { id: BetaalMethode; label: string; icon: React.ReactNode; beschrijving: string }[] = [
-  { id: 'bancontact', label: 'Bancontact', icon: <Building2 className="w-5 h-5" />, beschrijving: 'Betaal met je bankkaart' },
-  { id: 'kaart', label: 'Kredietkaart', icon: <CreditCard className="w-5 h-5" />, beschrijving: 'Visa, Mastercard, Amex' },
-  { id: 'apple_pay', label: 'Apple Pay', icon: <Smartphone className="w-5 h-5" />, beschrijving: 'Snel betalen met je iPhone' },
-  { id: 'google_pay', label: 'Google Pay', icon: <Smartphone className="w-5 h-5" />, beschrijving: 'Betaal met Google Pay' },
-]
-
 export default function CheckoutPage() {
-  const router = useRouter()
   const { cart, clearCart } = useCart()
-  const [stap, setStap] = useState<CheckoutStap>('gegevens')
-  const [geselecteerdeBetaalMethode, setGeselecteerdeBetaalMethode] = useState<BetaalMethode>('bancontact')
-  const [orderId] = useState(generateOrderId())
-  const [errors, setErrors] = useState<Partial<KlantForm>>({})
-  const [form, setForm] = useState<KlantForm>({
-    voornaam: '',
+  const [bestellingNummer] = useState(generateOrderId())
+  const [geplaatst, setGeplaatst] = useState(false)
+  const [bezig, setBezig] = useState(false)
+  const [fout, setFout] = useState<string | null>(null)
+  const [errors, setErrors] = useState<Partial<LeverForm>>({})
+  const [form, setForm] = useState<LeverForm>({
+    voornaam:   '',
     achternaam: '',
-    email: '',
-    telefoon: '',
-    opmerking: '',
+    email:      '',
+    telefoon:   '',
+    straat:     '',
+    huisnummer: '',
+    postcode:   '',
+    gemeente:   '',
+    opmerking:  '',
   })
 
-  if (cart.items.length === 0 && stap !== 'succes') {
+  if (cart.items.length === 0 && !geplaatst) {
     return (
       <div className="min-h-screen bg-cream pt-24 flex items-center justify-center">
         <div className="text-center">
@@ -54,79 +51,113 @@ export default function CheckoutPage() {
     )
   }
 
-  function valideer(): boolean {
-    const nieuwErrors: Partial<KlantForm> = {}
-    if (!form.voornaam.trim()) nieuwErrors.voornaam = 'Verplicht'
-    if (!form.achternaam.trim()) nieuwErrors.achternaam = 'Verplicht'
-    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nieuwErrors.email = 'Geldig e-mailadres vereist'
-    if (!form.telefoon.trim() || form.telefoon.length < 9) nieuwErrors.telefoon = 'Geldig telefoonnummer vereist'
-    setErrors(nieuwErrors)
-    return Object.keys(nieuwErrors).length === 0
-  }
-
-  function naarBetaling() {
-    if (valideer()) setStap('betaling')
-  }
-
-  async function bevestigBetaling() {
-    setStap('verwerking')
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    const succes = Math.random() > 0.1
-    if (succes) {
-      clearCart()
-      setStap('succes')
-    } else {
-      setStap('mislukt')
-    }
-  }
-
-  function update(veld: keyof KlantForm, waarde: string) {
+  function update(veld: keyof LeverForm, waarde: string) {
     setForm((prev) => ({ ...prev, [veld]: waarde }))
     if (errors[veld]) setErrors((prev) => ({ ...prev, [veld]: undefined }))
   }
 
-  if (stap === 'verwerking') {
-    return (
-      <div className="min-h-screen bg-cream pt-24 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-accent/20 border-t-accent rounded-full animate-spin mx-auto mb-6" />
-          <p className="text-charcoal font-medium">Betaling wordt verwerkt...</p>
-          <p className="text-gray-warm text-sm mt-2">Even geduld</p>
-        </div>
-      </div>
-    )
+  function valideer(): boolean {
+    const e: Partial<LeverForm> = {}
+    if (!form.voornaam.trim())   e.voornaam   = 'Verplicht'
+    if (!form.achternaam.trim()) e.achternaam = 'Verplicht'
+    if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(form.email.trim()))
+      e.email = 'Geldig e-mailadres vereist'
+    if (!form.telefoon.trim() || form.telefoon.length < 9)
+      e.telefoon = 'Geldig telefoonnummer vereist'
+    if (!form.straat.trim())     e.straat     = 'Verplicht'
+    if (!form.huisnummer.trim()) e.huisnummer = 'Verplicht'
+    if (!/^\d{4}$/.test(form.postcode.trim()))
+      e.postcode = '4-cijferige postcode vereist'
+    if (!form.gemeente.trim())   e.gemeente   = 'Verplicht'
+    setErrors(e)
+    return Object.keys(e).length === 0
   }
 
-  if (stap === 'succes') {
+  async function plaatsBestelling() {
+    if (!valideer()) return
+    setBezig(true)
+    setFout(null)
+
+    const items = cart.items.map((item) => {
+      const optiesMeerprijs = item.opties?.reduce((s, o) => s + o.meerprijs, 0) ?? 0
+      const eenheidsprijs = item.product.promoPercentage
+        ? item.product.prijs * (1 - item.product.promoPercentage / 100) + optiesMeerprijs
+        : item.product.prijs + optiesMeerprijs
+      return {
+        productId: item.product.id,
+        naam:      item.product.naam,
+        aantal:    item.aantal,
+        eenheidsprijs,
+        subtotaal: eenheidsprijs * item.aantal,
+        opties:    item.opties?.map((o) => ({ optieNaam: o.optieNaam, keuzeNaam: o.keuzeNaam, meerprijs: o.meerprijs })) ?? [],
+      }
+    })
+
+    try {
+      const res = await fetch('/api/bestellingen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bestellingNummer,
+          naam:       `${form.voornaam.trim()} ${form.achternaam.trim()}`,
+          telefoon:   form.telefoon.trim(),
+          email:      form.email.trim(),
+          straat:     form.straat.trim(),
+          huisnummer: form.huisnummer.trim(),
+          postcode:   form.postcode.trim(),
+          gemeente:   form.gemeente.trim(),
+          items,
+          totaal:     cart.subtotaal,
+          opmerking:  form.opmerking.trim() || undefined,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setFout(data.error ?? 'Er ging iets mis. Probeer opnieuw.')
+        setBezig(false)
+        return
+      }
+
+      clearCart()
+      setGeplaatst(true)
+    } catch {
+      setFout('Verbindingsfout. Controleer je internet en probeer opnieuw.')
+    }
+    setBezig(false)
+  }
+
+  if (geplaatst) {
     return (
       <div className="min-h-screen bg-cream pt-24 flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-2xl border border-border p-8 text-center">
           <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8 text-emerald-500" />
           </div>
-          <h1 className="text-2xl font-semibold text-charcoal mb-2">Bestelling geplaatst!</h1>
+          <h1 className="text-2xl font-semibold text-charcoal mb-2">Bestelling ontvangen!</h1>
           <p className="text-gray-warm mb-6">
-            Je ontvangt een bevestiging op <strong>{form.email}</strong>
+            Je bestelling is geregistreerd. Tot ziens bij Sushi Dendermonde!
           </p>
-          <div className="bg-cream rounded-xl p-4 mb-6 text-left space-y-2">
-            <div className="flex justify-between text-sm">
+          <div className="bg-cream rounded-xl p-4 mb-6 text-left space-y-2 text-sm">
+            <div className="flex justify-between">
               <span className="text-gray-warm">Bestelnummer</span>
-              <span className="font-mono font-bold text-charcoal">{orderId}</span>
+              <span className="font-mono font-bold text-charcoal">{bestellingNummer}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between">
               <span className="text-gray-warm">Naam</span>
               <span className="text-charcoal">{form.voornaam} {form.achternaam}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-warm">Leveradres</span>
+              <span className="text-charcoal text-right">
+                {form.straat} {form.huisnummer},<br />{form.postcode} {form.gemeente}
+              </span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-gray-warm">Totaal</span>
               <span className="font-semibold text-charcoal">{formatEuro(cart.subtotaal || 0)}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-warm">Status</span>
-              <span className="text-emerald-600 font-medium">Bevestigd</span>
-            </div>
           </div>
-          <p className="text-sm text-gray-warm mb-6">Klaar om af te halen: <strong className="text-charcoal">±20 minuten</strong></p>
           <Link
             href="/"
             className="inline-flex items-center justify-center w-full py-3 bg-accent text-white rounded-xl font-medium hover:bg-accent-dark transition-colors"
@@ -138,169 +169,162 @@ export default function CheckoutPage() {
     )
   }
 
-  if (stap === 'mislukt') {
-    return (
-      <div className="min-h-screen bg-cream pt-24 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl border border-border p-8 text-center">
-          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-red-500" />
-          </div>
-          <h1 className="text-2xl font-semibold text-charcoal mb-2">Betaling mislukt</h1>
-          <p className="text-gray-warm mb-6">Er ging iets mis. Probeer opnieuw of kies een andere betaalmethode.</p>
-          <button
-            onClick={() => setStap('betaling')}
-            className="w-full py-3 bg-accent text-white rounded-xl font-medium hover:bg-accent-dark transition-colors"
-          >
-            Opnieuw proberen
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-cream pt-20 lg:pt-24 pb-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link href="/bestellen" className="flex items-center gap-2 text-gray-warm hover:text-charcoal transition-colors text-sm">
             <ArrowLeft className="w-4 h-4" />
             Terug naar menu
           </Link>
-          <div className="flex-1 flex items-center gap-3">
-            {['Gegevens', 'Betaling'].map((s, i) => {
-              const actief = (stap === 'gegevens' && i === 0) || (stap === 'betaling' && i === 1)
-              const klaar = (stap === 'betaling' && i === 0)
-              return (
-                <div key={s} className="flex items-center gap-2">
-                  <div className={cn(
-                    'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold',
-                    klaar ? 'bg-emerald-500 text-white' : actief ? 'bg-accent text-white' : 'bg-gray-light text-gray-warm'
-                  )}>
-                    {klaar ? '✓' : i + 1}
-                  </div>
-                  <span className={cn('text-sm hidden sm:block', actief ? 'text-charcoal font-medium' : 'text-gray-warm')}>{s}</span>
-                  {i < 1 && <div className="w-8 h-px bg-border" />}
-                </div>
-              )
-            })}
+          <div className="flex items-center gap-2">
+            <Truck className="w-4 h-4 text-accent" />
+            <span className="text-sm font-medium text-charcoal">Levering aan huis</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
-          {/* Main form */}
-          <div>
-            {stap === 'gegevens' && (
-              <div className="bg-white rounded-2xl border border-border p-6 lg:p-8">
-                <h2 className="font-semibold text-charcoal text-lg mb-2">Jouw gegevens</h2>
-                <p className="text-sm text-gray-warm mb-6">Je bestelling wordt klaargemaakt voor afhaling.</p>
+          {/* Form */}
+          <div className="bg-white rounded-2xl border border-border p-6 lg:p-8">
+            <h2 className="font-semibold text-charcoal text-lg mb-1">Jouw gegevens</h2>
+            <p className="text-sm text-gray-warm mb-6">Vul je contactgegevens en leveradres in.</p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { veld: 'voornaam' as const, label: 'Voornaam', type: 'text', col: 1 },
-                    { veld: 'achternaam' as const, label: 'Achternaam', type: 'text', col: 1 },
-                    { veld: 'email' as const, label: 'E-mailadres', type: 'email', col: 2 },
-                    { veld: 'telefoon' as const, label: 'Telefoonnummer', type: 'tel', col: 1 },
-                  ].map(({ veld, label, type, col }) => (
-                    <div key={veld} className={col === 2 ? 'sm:col-span-2' : ''}>
-                      <label className="block text-xs font-medium text-charcoal mb-1.5">{label}</label>
-                      <input
-                        type={type}
-                        value={form[veld]}
-                        onChange={(e) => update(veld, e.target.value)}
-                        className={cn(
-                          'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
-                          errors[veld] ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
-                        )}
-                      />
-                      {errors[veld] && <p className="text-red-500 text-xs mt-1">{errors[veld]}</p>}
-                    </div>
-                  ))}
-
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium text-charcoal mb-1.5">Opmerking (optioneel)</label>
-                    <textarea
-                      value={form.opmerking}
-                      onChange={(e) => update('opmerking', e.target.value)}
-                      rows={3}
-                      placeholder="Bijv. allergieën, speciale wensen..."
-                      className="w-full px-4 py-2.5 text-sm border border-border rounded-xl focus:outline-none focus:border-accent resize-none"
+            <div className="space-y-5">
+              {/* Naam */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {([
+                  { veld: 'voornaam'   as const, label: 'Voornaam' },
+                  { veld: 'achternaam' as const, label: 'Achternaam' },
+                ] as const).map(({ veld, label }) => (
+                  <div key={veld}>
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">{label}</label>
+                    <input
+                      type="text"
+                      value={form[veld]}
+                      onChange={(e) => update(veld, e.target.value)}
+                      className={cn(
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors[veld] ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
+                      )}
                     />
+                    {errors[veld] && <p className="text-red-500 text-xs mt-1">{errors[veld]}</p>}
+                  </div>
+                ))}
+              </div>
+
+              {/* Contact */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {([
+                  { veld: 'email'    as const, label: 'E-mailadres', type: 'email' },
+                  { veld: 'telefoon' as const, label: 'Telefoonnummer', type: 'tel' },
+                ] as const).map(({ veld, label, type }) => (
+                  <div key={veld}>
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">{label}</label>
+                    <input
+                      type={type}
+                      value={form[veld]}
+                      onChange={(e) => update(veld, e.target.value)}
+                      className={cn(
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors[veld] ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
+                      )}
+                    />
+                    {errors[veld] && <p className="text-red-500 text-xs mt-1">{errors[veld]}</p>}
+                  </div>
+                ))}
+              </div>
+
+              {/* Leveradres */}
+              <div>
+                <p className="text-xs font-semibold text-charcoal uppercase tracking-widest mb-3">Leveradres</p>
+                <div className="grid grid-cols-[1fr_auto] gap-3 mb-3">
+                  <div>
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">Straat</label>
+                    <input
+                      type="text"
+                      value={form.straat}
+                      onChange={(e) => update('straat', e.target.value)}
+                      className={cn(
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors.straat ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
+                      )}
+                    />
+                    {errors.straat && <p className="text-red-500 text-xs mt-1">{errors.straat}</p>}
+                  </div>
+                  <div className="w-24">
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">Nr.</label>
+                    <input
+                      type="text"
+                      value={form.huisnummer}
+                      onChange={(e) => update('huisnummer', e.target.value)}
+                      className={cn(
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors.huisnummer ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
+                      )}
+                    />
+                    {errors.huisnummer && <p className="text-red-500 text-xs mt-1">{errors.huisnummer}</p>}
                   </div>
                 </div>
-
-                <button
-                  onClick={naarBetaling}
-                  className="w-full mt-6 py-3.5 bg-accent text-white rounded-xl font-medium hover:bg-accent-dark transition-colors"
-                >
-                  Doorgaan naar betaling
-                </button>
-              </div>
-            )}
-
-            {stap === 'betaling' && (
-              <div className="bg-white rounded-2xl border border-border p-6 lg:p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <button onClick={() => setStap('gegevens')} className="text-gray-warm hover:text-charcoal">
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                  <h2 className="font-semibold text-charcoal text-lg">Betaalmethode</h2>
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  {betaalMethoden.map((methode) => (
-                    <label
-                      key={methode.id}
+                <div className="grid grid-cols-[auto_1fr] gap-3">
+                  <div className="w-28">
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">Postcode</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={4}
+                      value={form.postcode}
+                      onChange={(e) => update('postcode', e.target.value)}
                       className={cn(
-                        'flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all',
-                        geselecteerdeBetaalMethode === methode.id
-                          ? 'border-accent bg-accent/5'
-                          : 'border-border hover:border-accent/40'
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors.postcode ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
                       )}
-                    >
-                      <input
-                        type="radio"
-                        name="betaalmethode"
-                        value={methode.id}
-                        checked={geselecteerdeBetaalMethode === methode.id}
-                        onChange={() => setGeselecteerdeBetaalMethode(methode.id)}
-                        className="sr-only"
-                      />
-                      <div className={cn('w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0',
-                        geselecteerdeBetaalMethode === methode.id ? 'border-accent' : 'border-gray-light'
-                      )}>
-                        {geselecteerdeBetaalMethode === methode.id && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
-                      </div>
-                      <div className="flex items-center gap-3 flex-1">
-                        <span className="text-gray-warm">{methode.icon}</span>
-                        <div>
-                          <p className="text-sm font-medium text-charcoal">{methode.label}</p>
-                          <p className="text-xs text-gray-warm">{methode.beschrijving}</p>
-                        </div>
-                      </div>
-                    </label>
-                  ))}
+                    />
+                    {errors.postcode && <p className="text-red-500 text-xs mt-1">{errors.postcode}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-charcoal mb-1.5">Gemeente</label>
+                    <input
+                      type="text"
+                      value={form.gemeente}
+                      onChange={(e) => update('gemeente', e.target.value)}
+                      className={cn(
+                        'w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none transition-colors',
+                        errors.gemeente ? 'border-red-400 bg-red-50' : 'border-border focus:border-accent'
+                      )}
+                    />
+                    {errors.gemeente && <p className="text-red-500 text-xs mt-1">{errors.gemeente}</p>}
+                  </div>
                 </div>
-
-                <div className="bg-cream rounded-xl p-4 mb-6 text-xs text-gray-warm flex items-start gap-2">
-                  <span>🔒</span>
-                  <span>
-                    Je betaling wordt veilig verwerkt. Dit is een demo-omgeving — er worden geen echte betalingen uitgevoerd.
-                    In productie wordt dit gekoppeld aan een gecertificeerde payment provider.
-                  </span>
-                </div>
-
-                <button
-                  onClick={bevestigBetaling}
-                  className="w-full py-3.5 bg-accent text-white rounded-xl font-semibold hover:bg-accent-dark transition-colors"
-                >
-                  Betaal {formatEuro(cart.subtotaal)} via {betaalMethoden.find(m => m.id === geselecteerdeBetaalMethode)?.label}
-                </button>
               </div>
-            )}
+
+              {/* Opmerking */}
+              <div>
+                <label className="block text-xs font-medium text-charcoal mb-1.5">Opmerking (optioneel)</label>
+                <textarea
+                  value={form.opmerking}
+                  onChange={(e) => update('opmerking', e.target.value)}
+                  rows={3}
+                  placeholder="Bijv. bel aan bij de achterdeur, allergieën..."
+                  className="w-full px-4 py-2.5 text-sm border border-border rounded-xl focus:outline-none focus:border-accent resize-none"
+                />
+              </div>
+
+              {fout && (
+                <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{fout}</p>
+              )}
+
+              <button
+                onClick={plaatsBestelling}
+                disabled={bezig}
+                className="w-full py-3.5 bg-accent disabled:opacity-60 text-white rounded-xl font-semibold hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"
+              >
+                <Truck className="w-4 h-4" />
+                {bezig ? 'Bestelling wordt geplaatst...' : `Bestelling plaatsen — ${formatEuro(cart.subtotaal)}`}
+              </button>
+            </div>
           </div>
 
-          {/* Order summary */}
+          {/* Overzicht */}
           <div className="bg-white rounded-2xl border border-border p-5 h-fit">
             <h3 className="font-semibold text-charcoal text-sm mb-4">Overzicht bestelling</h3>
             <div className="space-y-3 mb-4">
@@ -321,7 +345,8 @@ export default function CheckoutPage() {
             </div>
             <div className="border-t border-border pt-3">
               <div className="flex justify-between font-semibold text-charcoal">
-                <span>Totaal</span><span>{formatEuro(cart.subtotaal)}</span>
+                <span>Totaal</span>
+                <span>{formatEuro(cart.subtotaal)}</span>
               </div>
             </div>
           </div>

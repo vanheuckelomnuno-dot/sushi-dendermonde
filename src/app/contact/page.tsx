@@ -46,7 +46,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="font-medium text-charcoal mb-1">Adres</p>
-                  <p className="text-gray-warm text-sm">Grote Markt 42<br />9200 Dendermonde</p>
+                  <p className="text-gray-warm text-sm">Statieplein 34<br />9200 Dendermonde</p>
                 </div>
               </div>
               <div className="flex gap-4">

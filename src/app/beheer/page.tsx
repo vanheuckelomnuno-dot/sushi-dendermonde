@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { format, isToday, parseISO } from 'date-fns'
 import { nl } from 'date-fns/locale'
-import { RefreshCw, Trash2, Phone, Mail, Users, Clock, Calendar, Bell, Truck, MapPin, ShoppingBag } from 'lucide-react'
+import { RefreshCw, Trash2, Phone, Mail, Users, Clock, Calendar, Bell, Truck, ShoppingBag } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatEuro } from '@/lib/utils'
 
@@ -39,10 +39,6 @@ interface Bestelling {
   naam:             string
   telefoon:         string
   email:            string
-  straat:           string
-  huisnummer:       string
-  postcode:         string
-  gemeente:         string
   items:            BestellingItem[]
   totaal:           number
   opmerking?:       string
@@ -447,10 +443,6 @@ export default function BeheerPage() {
                       <div>
                         <p className="font-semibold text-charcoal text-sm">{best.naam}</p>
                         <p className="text-xs text-gray-warm font-mono">{best.bestellingNummer}</p>
-                        <p className="flex items-center gap-1 text-xs text-gray-warm mt-1">
-                          <MapPin className="w-3 h-3 shrink-0" />
-                          {best.straat} {best.huisnummer}, {best.postcode} {best.gemeente}
-                        </p>
                       </div>
                       <span className={cn('text-xs font-medium px-2.5 py-1 rounded-full border shrink-0', s.kleur)}>
                         {s.label}

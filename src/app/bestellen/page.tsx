@@ -6,7 +6,7 @@ import { categories } from '@/data/categories'
 import { ProductCard } from '@/components/bestellen/ProductCard'
 import { CartSidebar } from '@/components/bestellen/CartSidebar'
 import { MobileCartButton } from '@/components/bestellen/MobileCartButton'
-import { Search } from 'lucide-react'
+import { Search, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function BestellenPage() {
@@ -26,6 +26,14 @@ export default function BestellenPage() {
 
   return (
     <div className="min-h-screen bg-cream pt-20 lg:pt-24">
+      {/* Banner: enkel afhaling */}
+      <div className="bg-charcoal text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-2 text-sm text-center">
+          <MapPin className="w-4 h-4 text-accent shrink-0" />
+          <span>Enkel <strong>afhaling</strong> — Statieplein 34, 9200 Dendermonde. Wij leveren niet aan huis.</span>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

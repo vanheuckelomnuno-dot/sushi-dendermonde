@@ -82,22 +82,6 @@ function valideer(b: Record<string, unknown>): string | null {
   if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email) || email.length > 255)
     return 'Ongeldig e-mailadres'
 
-  const straat = typeof b.straat === 'string' ? b.straat.trim() : ''
-  if (straat.length < 2 || straat.length > 150)
-    return 'Straatnaam ontbreekt of te lang'
-
-  const huisnummer = typeof b.huisnummer === 'string' ? b.huisnummer.trim() : ''
-  if (!huisnummer || huisnummer.length > 10)
-    return 'Huisnummer ontbreekt of te lang'
-
-  const postcode = typeof b.postcode === 'string' ? b.postcode.trim() : ''
-  if (!/^\d{4}$/.test(postcode))
-    return 'Ongeldige postcode (4 cijfers vereist)'
-
-  const gemeente = typeof b.gemeente === 'string' ? b.gemeente.trim() : ''
-  if (gemeente.length < 2 || gemeente.length > 100)
-    return 'Gemeente ontbreekt of te lang'
-
   if (!Array.isArray(b.items) || b.items.length === 0)
     return 'Bestelling bevat geen items'
 
@@ -129,10 +113,6 @@ function mapRij(r: RowDataPacket) {
     naam:             r.naam,
     telefoon:         r.telefoon,
     email:            r.email,
-    straat:           r.straat,
-    huisnummer:       r.huisnummer,
-    postcode:         r.postcode,
-    gemeente:         r.gemeente,
     items,
     totaal:           Number(r.totaal),
     opmerking:        r.opmerking ?? '',
@@ -180,17 +160,13 @@ export async function POST(req: NextRequest) {
   try {
     await getPool().execute(
       `INSERT INTO bestellingen
-         (bestelling_nummer, naam, telefoon, email, straat, huisnummer, postcode, gemeente, items, totaal, opmerking)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (bestelling_nummer, naam, telefoon, email, items, totaal, opmerking)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         bestellingNummer,
         (body.naam as string).trim().slice(0, 100),
         (body.telefoon as string).trim().slice(0, 20),
         (body.email as string).trim().toLowerCase().slice(0, 255),
-        (body.straat as string).trim().slice(0, 150),
-        (body.huisnummer as string).trim().slice(0, 10),
-        (body.postcode as string).trim().slice(0, 10),
-        (body.gemeente as string).trim().slice(0, 100),
         JSON.stringify(body.items),
         Number(body.totaal),
         body.opmerking ? (body.opmerking as string).trim().slice(0, 500) : null,
